@@ -5,6 +5,7 @@
 package ai.mazepathfinder.dfs;
 
 import java.awt.Color;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -20,7 +21,7 @@ public class Main extends javax.swing.JFrame {
         initComponents(); // Initialize the components of the JFrame
 
         // Create the MazeGrid and add it to the panelMaze
-        mazeGrid = new MazeGrid(3, 6, 4, 4); // Start at position (3, 6), end at (4, 4)
+        mazeGrid = new MazeGrid(3, 6, 7, 7); // Start at position (3, 6), end at (4, 4)
         panelMaze.setLayout(new java.awt.BorderLayout()); // Set the layout of the panelMaze
         panelMaze.add(mazeGrid, java.awt.BorderLayout.CENTER); // Add MazeGrid to the panelMaze
         panelMaze.setBackground(Color.RED); // Set background color to red
@@ -40,8 +41,10 @@ public class Main extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         panelMaze = new javax.swing.JPanel();
         btnStart = new javax.swing.JButton();
+        btnRestart = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("MazePathfinder");
 
         panelMaze.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
 
@@ -57,6 +60,18 @@ public class Main extends javax.swing.JFrame {
         );
 
         btnStart.setText("Start");
+        btnStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStartActionPerformed(evt);
+            }
+        });
+
+        btnRestart.setText("Restart");
+        btnRestart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRestartActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -65,7 +80,10 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnStart)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnRestart)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnStart))
                     .addComponent(panelMaze, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
@@ -75,7 +93,9 @@ public class Main extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(panelMaze, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
-                .addComponent(btnStart)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnStart)
+                    .addComponent(btnRestart))
                 .addContainerGap(89, Short.MAX_VALUE))
         );
 
@@ -94,6 +114,18 @@ public class Main extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
+        if(mazeGrid.findPathDFS()) {
+            JOptionPane.showMessageDialog(rootPane, "Path founded succesfully");
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "None path was found");
+        }
+    }//GEN-LAST:event_btnStartActionPerformed
+
+    private void btnRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestartActionPerformed
+        mazeGrid.resetGrid();
+    }//GEN-LAST:event_btnRestartActionPerformed
 
     /**
      * @param args the command line arguments
@@ -131,6 +163,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRestart;
     private javax.swing.JButton btnStart;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel panelMaze;

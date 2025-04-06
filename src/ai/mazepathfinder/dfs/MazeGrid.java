@@ -10,7 +10,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class MazeGrid extends JPanel {
     private static final int SIZE = 8; // Size of the matrix (8x8)
@@ -171,5 +173,94 @@ public class MazeGrid extends JPanel {
         }
 
         return false; // If no path is found, return false
+    }
+    
+    // Method to initiate BFS pathfinding
+    public boolean findPathBFS() {
+        boolean[][] visited = new boolean[SIZE][SIZE]; // Matrix to track visited cells
+        path.clear(); // Clear the previous path
+
+        long startTime = System.nanoTime(); // Start the timer
+
+        boolean result = bfs(startX, startY, visited); // Call BFS from the start cell
+
+        long endTime = System.nanoTime(); // Stop the timer
+        long duration = (endTime - startTime) / 1_000_000; // Calculate the time in milliseconds
+
+        System.out.println("BFS Execution time: " + duration + " ms");
+
+        return result;
+    }
+
+    private boolean bfs(int startRow, int startCol, boolean[][] visited) {
+        Queue<Point> queue = new LinkedList<>();
+        Point[][] parent = new Point[SIZE][SIZE]; // To reconstruct the path
+
+        // Mark the starting cell as visited and enqueue it
+        visited[startRow][startCol] = true;
+        queue.add(new Point(startRow, startCol));
+        parent[startRow][startCol] = null; // Start point has no parent
+
+        // Directions: up, down, left, right
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+
+        while (!queue.isEmpty()) {
+            Point current = queue.poll();
+            int row = current.x;
+            int col = current.y;
+
+            // Visualize the exploration (yellow)
+            if (!(row == startX && col == startY) && !(row == endX && col == endY)) {
+                grid[row][col] = 2;
+                repaint();
+                try {
+                    Thread.sleep(200); // Delay for visualization
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Check if we've reached the end
+            if (row == endX && col == endY) {
+                // Reconstruct the path
+                reconstructPath(parent);
+                return true;
+            }
+
+            // Explore all 4 directions
+            for (int i = 0; i < 4; i++) {
+                int newRow = row + dr[i];
+                int newCol = col + dc[i];
+
+                // Check if the new position is valid
+                if (newRow >= 0 && newRow < SIZE && newCol >= 0 && newCol < SIZE && 
+                    grid[newRow][newCol] != 0 && !visited[newRow][newCol]) {
+                    visited[newRow][newCol] = true;
+                    parent[newRow][newCol] = current;
+                    queue.add(new Point(newRow, newCol));
+                }
+            }
+        }
+
+        return false; // No path found
+    }
+
+    // Helper method to reconstruct the path from BFS
+    private void reconstructPath(Point[][] parent) {
+        path.clear();
+        Point current = new Point(endX, endY);
+
+        while (current != null) {
+            path.add(0, current); // Add to beginning to reverse the order
+            current = parent[current.x][current.y];
+        }
+
+        // Remove the start point if you don't want it in the path
+        if (!path.isEmpty() && path.get(0).x == startX && path.get(0).y == startY) {
+            path.remove(0);
+        }
+
+        repaint(); // Update the visualization
     }
 }

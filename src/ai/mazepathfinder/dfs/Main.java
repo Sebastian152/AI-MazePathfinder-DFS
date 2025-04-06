@@ -5,6 +5,7 @@
 package ai.mazepathfinder.dfs;
 
 import java.awt.Color;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -19,6 +20,8 @@ public class Main extends javax.swing.JFrame {
      */
     public Main() {
         initComponents(); // Initialize the components of the JFrame
+        
+        setIconImage(new ImageIcon(getClass().getResource("/resources/MazeRouteLogo.png")).getImage());
 
         // Create the MazeGrid and add it to the panelMaze
         mazeGrid = new MazeGrid(3, 6, 7, 7); // Start at position (3, 6), end at (4, 4)
@@ -42,6 +45,7 @@ public class Main extends javax.swing.JFrame {
         panelMaze = new javax.swing.JPanel();
         btnStart = new javax.swing.JButton();
         btnRestart = new javax.swing.JButton();
+        cboxAlgorithm = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MazePathfinder");
@@ -73,6 +77,8 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        cboxAlgorithm.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Depth-First Search", "Breadth-First Search" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -81,6 +87,8 @@ public class Main extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(cboxAlgorithm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(btnRestart)
                         .addGap(18, 18, 18)
                         .addComponent(btnStart))
@@ -95,7 +103,8 @@ public class Main extends javax.swing.JFrame {
                 .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnStart)
-                    .addComponent(btnRestart))
+                    .addComponent(btnRestart)
+                    .addComponent(cboxAlgorithm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(89, Short.MAX_VALUE))
         );
 
@@ -116,11 +125,21 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
-        if(mazeGrid.findPathDFS()) {
-            JOptionPane.showMessageDialog(rootPane, "Path founded succesfully");
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "None path was found");
+        String selectedAlgorithm = (String) cboxAlgorithm.getSelectedItem();
+        if(selectedAlgorithm.equals("Depth-First Search")) {
+            if(mazeGrid.findPathDFS()) {
+                JOptionPane.showMessageDialog(rootPane, "Path founded succesfully");
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "None path was found");
+            }
+        } else if (selectedAlgorithm.equals("Breadth-First Search")) {
+            if(mazeGrid.findPathBFS()) {
+                JOptionPane.showMessageDialog(rootPane, "Path founded succesfully");
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "None path was found");
+            }
         }
+        
     }//GEN-LAST:event_btnStartActionPerformed
 
     private void btnRestartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRestartActionPerformed
@@ -165,6 +184,7 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRestart;
     private javax.swing.JButton btnStart;
+    private javax.swing.JComboBox<String> cboxAlgorithm;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel panelMaze;
     // End of variables declaration//GEN-END:variables
